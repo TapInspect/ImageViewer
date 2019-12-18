@@ -423,7 +423,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         scrubber.frame.origin.y = (footerView?.frame.origin.y ?? self.view.bounds.maxY) - scrubber.bounds.height
     }
 
-    @objc fileprivate func deleteItem() {
+    @objc public func deleteItem() {
 
         deleteButton?.isEnabled = false
         view.isUserInteractionEnabled = false
