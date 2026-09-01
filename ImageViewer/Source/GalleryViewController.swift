@@ -220,7 +220,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             navigationController.toolbar.scrollEdgeAppearance = toolbarAppearance
         }
 
-        navigationController.isNavigationBarHidden = true
+        setBarsVisible(!decorationViewsHidden, animated: false)
     }
 
     fileprivate func configureScrubber() {
@@ -262,7 +262,6 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
         isAnimating = true
 
-        ///Animates decoration views to the initial state if they are set to be visible on launch. We do not need to do anything if they are set to be hidden because they are already set up as hidden by default. Unhiding them for the launch is part of chosen UX.
         initialItemController?.presentItem(alongsideAnimation: { [weak self] in
 
             self?.overlayView.present()
@@ -270,11 +269,6 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             }, completion: { [weak self] in
 
                 if let strongSelf = self {
-
-                    if strongSelf.decorationViewsHidden == false {
-
-                        strongSelf.animateDecorationViews(visible: true)
-                    }
 
                     strongSelf.isAnimating = false
 
