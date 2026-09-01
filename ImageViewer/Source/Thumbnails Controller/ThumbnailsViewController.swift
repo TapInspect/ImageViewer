@@ -11,8 +11,6 @@ import UIKit
 class ThumbnailsViewController: UICollectionViewController {
 
     fileprivate let reuseIdentifier = "ThumbnailCell"
-    fileprivate var isAnimating = false
-    fileprivate let rotationAnimationDuration = 0.2
 
     var onItemSelected: ((Int) -> Void)?
     weak var itemsDataSource: GalleryItemsDataSource!
@@ -22,36 +20,10 @@ class ThumbnailsViewController: UICollectionViewController {
         self.itemsDataSource = itemsDataSource
 
         super.init(collectionViewLayout: ThumbnailsViewController.makeLayout())
-
-        NotificationCenter.default.addObserver(self, selector: #selector(rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    @objc func rotate() {
-        guard UIApplication.isPortraitOnly else { return }
-
-        guard UIDevice.current.orientation.isFlat == false &&
-            isAnimating == false else { return }
-
-        isAnimating = true
-
-        UIView.animate(withDuration: rotationAnimationDuration, delay: 0, options: UIView.AnimationOptions.curveLinear, animations: { [weak self] () -> Void in
-            self?.view.transform = windowRotationTransform()
-            self?.view.bounds = rotationAdjustedBounds()
-            self?.view.setNeedsLayout()
-            self?.view.layoutIfNeeded()
-
-            })
-        { [weak self] finished  in
-            self?.isAnimating = false
-        }
     }
 
     private static func makeLayout() -> UICollectionViewLayout {
