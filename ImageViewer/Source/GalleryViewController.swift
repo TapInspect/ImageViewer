@@ -44,7 +44,6 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
     fileprivate var headerLayout = HeaderLayout.center(25)
     fileprivate var footerLayout = FooterLayout.center(25)
     fileprivate var closeLayout = ButtonLayout.pinRight(8, 16)
-    fileprivate var seeAllCloseLayout = ButtonLayout.pinRight(8, 16)
     fileprivate var thumbnailsLayout = ButtonLayout.pinLeft(8, 16)
     fileprivate var deleteLayout = ButtonLayout.pinRight(8, 66)
     fileprivate var statusBarHidden = true
@@ -106,7 +105,6 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             case .colorDismissDuration(let duration):           overlayView.colorDismissDuration = duration
             case .colorDismissDelay(let delay):                 overlayView.colorDismissDelay = delay
             case .continuePlayVideoOnEnd(let enabled):          continueNextVideoOnFinish = enabled
-            case .seeAllCloseLayout(let layout):                seeAllCloseLayout = layout
             case .videoControlsColor(let color):                scrubber.tintColor = color
             case .closeButtonMode(let buttonMode):
 
@@ -445,13 +443,11 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
         if let closeButton = seeAllCloseButton {
             thumbnailsController.closeButton = closeButton
-            thumbnailsController.closeLayout = seeAllCloseLayout
         } else if let closeButton = closeButton {
             let seeAllCloseButton = UIButton(frame: CGRect(origin: CGPoint.zero, size: closeButton.bounds.size))
             seeAllCloseButton.setImage(closeButton.image(for: UIControl.State()), for: UIControl.State())
             seeAllCloseButton.setImage(closeButton.image(for: .highlighted), for: .highlighted)
             thumbnailsController.closeButton = seeAllCloseButton
-            thumbnailsController.closeLayout = closeLayout
         }
 
         thumbnailsController.onItemSelected = { [weak self] index in
@@ -459,7 +455,9 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             self?.page(toIndex: index)
         }
 
-        present(thumbnailsController, animated: true, completion: nil)
+        let navigationController = UINavigationController(rootViewController: thumbnailsController)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true, completion: nil)
     }
 
     open func page(toIndex index: Int) {

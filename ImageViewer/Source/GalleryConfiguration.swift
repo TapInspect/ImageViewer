@@ -33,9 +33,6 @@ public enum GalleryConfigurationItem {
     /// Layout behaviour for the Close button.
     case closeLayout(ButtonLayout)
 
-    /// Layout behaviour for the Close button within the Thumbnails screen.
-    case seeAllCloseLayout(ButtonLayout)
-    
     /// Layout behaviour for the Thumbnails button.
     case thumbnailsLayout(ButtonLayout)
 

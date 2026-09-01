@@ -8,10 +8,9 @@
 
 import UIKit
 
-class ThumbnailsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UINavigationBarDelegate {
+class ThumbnailsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
     fileprivate let reuseIdentifier = "ThumbnailCell"
-    fileprivate let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
     fileprivate var isAnimating = false
     fileprivate let rotationAnimationDuration = 0.2
 
@@ -19,7 +18,6 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
     let layout = UICollectionViewFlowLayout()
     weak var itemsDataSource: GalleryItemsDataSource!
     var closeButton: UIButton?
-    var closeLayout: ButtonLayout?
 
     required init(itemsDataSource: GalleryItemsDataSource) {
         self.itemsDataSource = itemsDataSource
@@ -61,7 +59,7 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
         super.viewDidLoad()
 
         let screenWidth = self.view.frame.width
-        layout.sectionInset = UIEdgeInsets(top: 50, left: 8, bottom: 8, right: 8)
+        layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         layout.itemSize = CGSize(width: screenWidth/3 - 8, height: screenWidth/3 - 8)
         layout.minimumInteritemSpacing = 4
         layout.minimumLineSpacing = 4
@@ -72,22 +70,13 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
     }
 
     fileprivate func addCloseButton() {
-        guard let closeButton = closeButton, let closeLayout = closeLayout else { return }
 
-        switch closeLayout {
-        case .pinRight(let marginTop, let marginRight):
-            closeButton.autoresizingMask = [.flexibleBottomMargin, .flexibleLeftMargin]
-            closeButton.frame.origin.x = self.view.bounds.size.width - marginRight - closeButton.bounds.size.width
-            closeButton.frame.origin.y = marginTop
-        case .pinLeft(let marginTop, let marginLeft):
-            closeButton.autoresizingMask = [.flexibleBottomMargin, .flexibleRightMargin]
-            closeButton.frame.origin.x = marginLeft
-            closeButton.frame.origin.y = marginTop
+        if let closeButton = closeButton {
+            closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(close))
         }
-
-        closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-
-        self.view.addSubview(closeButton)
     }
 
     @objc func close() {
