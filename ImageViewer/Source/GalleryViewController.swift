@@ -206,8 +206,14 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
         navigationController.overrideUserInterfaceStyle = .dark
 
+        /// On iOS 26 the glass bar items pick their own foreground from the content behind them; earlier systems draw flat items that need an explicit color over the photo.
+        let legacyForeground: UIColor? = if #unavailable(iOS 26.0) { .white } else { nil }
+
         let navigationBarAppearance = UINavigationBarAppearance()
         navigationBarAppearance.configureWithTransparentBackground()
+        if let legacyForeground = legacyForeground {
+            navigationBarAppearance.titleTextAttributes = [.foregroundColor: legacyForeground]
+        }
         navigationController.navigationBar.standardAppearance = navigationBarAppearance
         navigationController.navigationBar.compactAppearance = navigationBarAppearance
         navigationController.navigationBar.scrollEdgeAppearance = navigationBarAppearance
@@ -219,6 +225,9 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         if #available(iOS 15.0, *) {
             navigationController.toolbar.scrollEdgeAppearance = toolbarAppearance
         }
+
+        navigationController.navigationBar.tintColor = legacyForeground
+        navigationController.toolbar.tintColor = legacyForeground
 
         setBarsVisible(!decorationViewsHidden, animated: false)
     }
