@@ -379,8 +379,6 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             itemController.closeDecorationViews(decorationViewsFadeDuration)
         }
 
-        setBarsVisible(false, animated: true)
-
         UIView.animate(withDuration: decorationViewsFadeDuration, animations: { [weak self] in
 
             self?.scrubber.alpha = 0.0
