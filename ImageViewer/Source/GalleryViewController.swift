@@ -196,25 +196,21 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         guard let navigationController = navigationController else { return }
 
         navigationController.isToolbarHidden = toolbarItems?.isEmpty ?? true
+        navigationController.overrideUserInterfaceStyle = .dark
 
         let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = .black
-        navigationBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationBarAppearance.configureWithTransparentBackground()
         navigationController.navigationBar.standardAppearance = navigationBarAppearance
         navigationController.navigationBar.compactAppearance = navigationBarAppearance
         navigationController.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-        navigationController.navigationBar.tintColor = .white
 
         let toolbarAppearance = UIToolbarAppearance()
-        toolbarAppearance.configureWithOpaqueBackground()
-        toolbarAppearance.backgroundColor = .black
+        toolbarAppearance.configureWithTransparentBackground()
         navigationController.toolbar.standardAppearance = toolbarAppearance
         navigationController.toolbar.compactAppearance = toolbarAppearance
         if #available(iOS 15.0, *) {
             navigationController.toolbar.scrollEdgeAppearance = toolbarAppearance
         }
-        navigationController.toolbar.tintColor = .white
 
         decorationViews.forEach { $0.alpha = 0 }
     }
