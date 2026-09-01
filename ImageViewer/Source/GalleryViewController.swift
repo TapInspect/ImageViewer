@@ -488,13 +488,8 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
     public func itemController(_ controller: ItemController, didSwipeToDismissWithDistanceToEdge distance: CGFloat) {
 
-        if decorationViewsHidden == false {
-
-            setBarsVisible(distance == 0, animated: true)
-
-            if controller is VideoViewController {
-                scrubber.alpha = 1 - distance * swipeToDismissFadeOutAccelerationFactor
-            }
+        if decorationViewsHidden == false && controller is VideoViewController {
+            scrubber.alpha = 1 - distance * swipeToDismissFadeOutAccelerationFactor
         }
 
         self.overlayView.blurringView.alpha = 1 - distance
