@@ -239,6 +239,9 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        /// Hiding the bars triggers a layout pass; re-centering the item here would fight the displacement and swipe animations that drive it.
+        guard isAnimating == false && swipingToDismiss == nil else { return }
+
         scrollView.frame = self.view.bounds
         activityIndicatorView.center = view.boundsCenter
 
