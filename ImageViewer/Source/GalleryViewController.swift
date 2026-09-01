@@ -237,10 +237,8 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
     open override func viewDidLoad() {
         super.viewDidLoad()
 
-        if #available(iOS 11.0, *) {
-            if (statusBarHidden || UIScreen.hasNotch) {
-                additionalSafeAreaInsets = UIEdgeInsets(top: -20, left: 0, bottom: 0, right: 0)
-            }
+        if statusBarHidden || UIScreen.hasNotch {
+            additionalSafeAreaInsets = UIEdgeInsets(top: -20, left: 0, bottom: 0, right: 0)
         }
 
         configureHeaderView()
@@ -315,11 +313,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
     }
 
     private var defaultInsets: UIEdgeInsets {
-        if #available(iOS 11.0, *) {
-            return view.safeAreaInsets
-        } else {
-            return UIEdgeInsets(top: statusBarHidden ? 0.0 : 20.0, left: 0.0, bottom: 0.0, right: 0.0)
-        }
+        return view.safeAreaInsets
     }
 
     fileprivate func layoutButton(_ button: UIButton?, layout: ButtonLayout) {
@@ -437,6 +431,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         }
 
         let navigationController = UINavigationController(rootViewController: thumbnailsController)
+        navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true, completion: nil)
     }
 
