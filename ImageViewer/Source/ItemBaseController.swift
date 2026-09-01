@@ -30,6 +30,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
     let itemCount: Int
     var swipingToDismiss: SwipeToDismiss?
     fileprivate var isAnimating = false
+    fileprivate var isDismissing = false
     fileprivate var fetchImageBlock: FetchImageBlock
 
     //CONFIGURATION
@@ -239,8 +240,9 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        /// Hiding the bars triggers a layout pass; re-centering the item here would fight the displacement and swipe animations that drive it.
-        guard isAnimating == false && swipingToDismiss == nil else { return }
+        /// Hiding the bars triggers a layout pass; re-centering the item here would fight the reverse displacement and swipe animations that drive it.
+        /// Presentation is not guarded: the image can arrive mid-animation and must still be sized.
+        guard isDismissing == false && swipingToDismiss == nil else { return }
 
         scrollView.frame = self.view.bounds
         activityIndicatorView.center = view.boundsCenter
@@ -516,6 +518,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
         guard isAnimating == false else { return }
         isAnimating = true
+        isDismissing = true
 
         alongsideAnimation()
 
