@@ -41,6 +41,9 @@ class ThumbnailsViewController: UICollectionViewController {
         self.collectionView?.register(ThumbnailCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         navigationItem.rightBarButtonItem = closeButton
+        if #unavailable(iOS 26.0) {
+            closeButton.tintColor = .black
+        }
     }
 
     @objc func close() {
