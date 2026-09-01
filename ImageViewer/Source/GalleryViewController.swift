@@ -158,10 +158,19 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         page(toIndex: currentIndex+1)
     }
 
-    /// The navigation bar and toolbar. Faded rather than hidden so the safe area, and with it the item layout, never moves.
-    fileprivate var decorationViews: [UIView] {
+    /// Both bars are hidden through the navigation controller rather than faded: on iOS 26 their glass items ignore the bars' alpha.
+    fileprivate func setBarsVisible(_ visible: Bool, animated: Bool) {
 
-        return [navigationController?.navigationBar, navigationController?.toolbar].compactMap { $0 }
+        guard let navigationController = navigationController else { return }
+
+        if navigationController.isNavigationBarHidden == visible {
+            navigationController.setNavigationBarHidden(!visible, animated: animated)
+        }
+
+        let toolbarHidden = !visible || (toolbarItems?.isEmpty ?? true)
+        if navigationController.isToolbarHidden != toolbarHidden {
+            navigationController.setToolbarHidden(toolbarHidden, animated: animated)
+        }
     }
 
     fileprivate func configureOverlayView() {
@@ -195,7 +204,6 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
         guard let navigationController = navigationController else { return }
 
-        navigationController.isToolbarHidden = toolbarItems?.isEmpty ?? true
         navigationController.overrideUserInterfaceStyle = .dark
 
         let navigationBarAppearance = UINavigationBarAppearance()
@@ -212,7 +220,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             navigationController.toolbar.scrollEdgeAppearance = toolbarAppearance
         }
 
-        decorationViews.forEach { $0.alpha = 0 }
+        navigationController.isNavigationBarHidden = true
     }
 
     fileprivate func configureScrubber() {
@@ -377,9 +385,10 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             itemController.closeDecorationViews(decorationViewsFadeDuration)
         }
 
+        setBarsVisible(false, animated: true)
+
         UIView.animate(withDuration: decorationViewsFadeDuration, animations: { [weak self] in
 
-            self?.decorationViews.forEach { $0.alpha = 0 }
             self?.scrubber.alpha = 0.0
 
             }, completion: { [weak self] done in
@@ -413,20 +422,15 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
     fileprivate func animateDecorationViews(visible: Bool) {
 
-        let targetAlpha: CGFloat = (visible) ? 1 : 0
+        setBarsVisible(visible, animated: true)
 
-        UIView.animate(withDuration: decorationViewsFadeDuration, animations: { [weak self] in
+        if let _ = viewControllers?.first as? VideoViewController {
 
-            self?.decorationViews.forEach { $0.alpha = targetAlpha }
+            UIView.animate(withDuration: 0.3, animations: { [weak self] in
 
-            if let _ = self?.viewControllers?.first as? VideoViewController {
-
-                UIView.animate(withDuration: 0.3, animations: { [weak self] in
-
-                    self?.scrubber.alpha = targetAlpha
-                })
-            }
-        })
+                self?.scrubber.alpha = (visible) ? 1 : 0
+            })
+        }
     }
 
     public func itemControllerWillAppear(_ controller: ItemController) {
@@ -494,12 +498,10 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
         if decorationViewsHidden == false {
 
-            let alpha = 1 - distance * swipeToDismissFadeOutAccelerationFactor
-
-            decorationViews.forEach { $0.alpha = alpha }
+            setBarsVisible(distance == 0, animated: true)
 
             if controller is VideoViewController {
-                scrubber.alpha = alpha
+                scrubber.alpha = 1 - distance * swipeToDismissFadeOutAccelerationFactor
             }
         }
 
