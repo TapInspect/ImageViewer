@@ -390,15 +390,21 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
                 if let strongSelf = self,
                     let itemController = strongSelf.viewControllers?.first as? ItemController {
 
+                    /// The item fade and the overlay fade run on their own durations; the gallery is only removed once both are done.
+                    let group = DispatchGroup()
+
+                    group.enter()
                     itemController.dismissItem(alongsideAnimation: {
 
-                        strongSelf.overlayView.dismiss()
+                        group.enter()
+                        strongSelf.overlayView.dismiss { group.leave() }
 
-                        }, completion: { [weak self] in
+                        }, completion: { group.leave() })
 
-                            self?.isAnimating = true
-                            self?.closeGallery(false, completion: completion)
-                    })
+                    group.notify(queue: .main) { [weak self] in
+
+                        self?.closeGallery(false, completion: completion)
+                    }
                 }
             })
     }

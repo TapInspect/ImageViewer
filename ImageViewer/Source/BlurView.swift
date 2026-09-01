@@ -77,18 +77,25 @@ class BlurView: UIView {
             }, completion: nil)
     }
 
-    func dismiss() {
+    /// `completion` runs once both the blur and the color layer have finished fading.
+    func dismiss(completion: (() -> Void)? = nil) {
 
+        let group = DispatchGroup()
+
+        group.enter()
         UIView.animate(withDuration: blurDismissDuration, delay: blurDismissDelay, options: .curveLinear, animations: { [weak self] in
 
             self?.blurringViewContainer.alpha = 0
 
-            }, completion: nil)
+            }, completion: { _ in group.leave() })
 
+        group.enter()
         UIView.animate(withDuration: colorDismissDuration, delay: colorDismissDelay, options: .curveLinear, animations: { [weak self] in
 
             self?.colorView.alpha = 0
 
-            }, completion: nil)
+            }, completion: { _ in group.leave() })
+
+        group.notify(queue: .main) { completion?() }
     }
 }
