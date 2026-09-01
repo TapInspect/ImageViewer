@@ -13,8 +13,7 @@ public extension UIViewController {
     func presentImageGallery(_ gallery: GalleryViewController, completion: (() -> Void)? = {}) {
 
         let navigationController = UINavigationController(rootViewController: gallery)
-        ///This less known/used presentation style option allows the contents of parent view controller presenting the gallery to "bleed through" the blurView. Otherwise we would see only black color.
-        navigationController.modalPresentationStyle = .overFullScreen
+        navigationController.modalPresentationStyle = gallery.modalPresentationStyle
         present(navigationController, animated: false, completion: completion)
     }
 }

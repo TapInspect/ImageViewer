@@ -138,6 +138,8 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             initialItemController = controller
         }
 
+        ///This less known/used presentation style option allows the contents of parent view controller presenting the gallery to "bleed through" the blurView. Otherwise we would see only black color. `presentImageGallery` copies it onto the wrapping navigation controller.
+        self.modalPresentationStyle = .overFullScreen
         self.dataSource = pagingDataSource
 
         UIApplication.applicationWindow.windowLevel = (statusBarHidden) ? UIWindow.Level.statusBar + 1 : UIWindow.Level.normal
