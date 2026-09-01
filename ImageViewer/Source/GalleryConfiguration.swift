@@ -20,9 +20,6 @@ public enum GalleryConfigurationItem {
 
     ///Option to set the Close button type.
     case closeButtonMode(ButtonMode)
-    
-    ///Option to set the Close button type  within the Thumbnails screen.
-    case seeAllCloseButtonMode(ButtonMode)
 
     ///Option to set the Thumbnails button type.
     case thumbnailsButtonMode(ButtonMode)

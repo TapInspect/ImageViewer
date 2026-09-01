@@ -17,7 +17,7 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
     var onItemSelected: ((Int) -> Void)?
     let layout = UICollectionViewFlowLayout()
     weak var itemsDataSource: GalleryItemsDataSource!
-    var closeButton: UIButton?
+    lazy var closeButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(close))
 
     required init(itemsDataSource: GalleryItemsDataSource) {
         self.itemsDataSource = itemsDataSource
@@ -66,17 +66,7 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
 
         self.collectionView?.register(ThumbnailCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
-        addCloseButton()
-    }
-
-    fileprivate func addCloseButton() {
-
-        if let closeButton = closeButton {
-            closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
-        } else {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(close))
-        }
+        navigationItem.rightBarButtonItem = closeButton
     }
 
     @objc func close() {

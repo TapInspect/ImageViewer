@@ -18,7 +18,6 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
     /// A custom view at the bottom of the gallery with layout using default (or custom) pinning settings for footer.
     open var footerView: UIView?
     fileprivate var closeButton: UIButton? = UIButton.closeButton()
-    fileprivate var seeAllCloseButton: UIButton? = nil
     fileprivate var thumbnailsButton: UIButton? = UIButton.thumbnailsButton()
     fileprivate var deleteButton: UIButton? = UIButton.deleteButton()
     fileprivate let scrubber = VideoScrubber()
@@ -112,15 +111,6 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
                 case .none:                 closeButton = nil
                 case .custom(let button):   closeButton = button
-                case .builtIn:              break
-                }
-
-            case .seeAllCloseButtonMode(let buttonMode):
-
-                switch buttonMode {
-
-                case .none:                 seeAllCloseButton = nil
-                case .custom(let button):   seeAllCloseButton = button
                 case .builtIn:              break
                 }
 
@@ -441,22 +431,12 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
         let thumbnailsController = ThumbnailsViewController(itemsDataSource: self.itemsDataSource)
 
-        if let closeButton = seeAllCloseButton {
-            thumbnailsController.closeButton = closeButton
-        } else if let closeButton = closeButton {
-            let seeAllCloseButton = UIButton(frame: CGRect(origin: CGPoint.zero, size: closeButton.bounds.size))
-            seeAllCloseButton.setImage(closeButton.image(for: UIControl.State()), for: UIControl.State())
-            seeAllCloseButton.setImage(closeButton.image(for: .highlighted), for: .highlighted)
-            thumbnailsController.closeButton = seeAllCloseButton
-        }
-
         thumbnailsController.onItemSelected = { [weak self] index in
 
             self?.page(toIndex: index)
         }
 
         let navigationController = UINavigationController(rootViewController: thumbnailsController)
-        navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true, completion: nil)
     }
 
