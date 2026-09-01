@@ -27,31 +27,16 @@ public enum GalleryConfigurationItem {
     ///Option to set the Delete button type.
     case deleteButtonMode(ButtonMode)
 
-    /// Layout behaviour for the Close button.
-    case closeLayout(ButtonLayout)
-
-    /// Layout behaviour for the Thumbnails button.
-    case thumbnailsLayout(ButtonLayout)
-
-    /// Layout behaviour for the Delete button.
-    case deleteLayout(ButtonLayout)
-
     /// This spinner is shown when we page to an image page, but the image itself is still loading.
     case spinnerStyle(UIActivityIndicatorView.Style)
 
     /// Tint color for the spinner.
     case spinnerColor(UIColor)
 
-    /// Layout behaviour for optional header view.
-    case headerViewLayout(HeaderLayout)
-
-    /// Layout behaviour for optional footer view.
-    case footerViewLayout(FooterLayout)
-
     /// Sets the status bar visible/invisible while gallery is presented.
     case statusBarHidden(Bool)
 
-    /// Sets the close button, header view and footer view visible/invisible on launch. Visibility of these three views is toggled by single tapping anywhere in the gallery area. This setting is global to Gallery.
+    /// Sets the navigation bar and toolbar visible/invisible on launch. Visibility is toggled by single tapping anywhere in the gallery area. This setting is global to Gallery.
     case hideDecorationViewsOnLaunch(Bool)
 
     ///Allows to turn on/off decoration views hiding via single tap.
@@ -102,9 +87,6 @@ public enum GalleryConfigurationItem {
     ///Transition duration for decoration views when they fade-in/fade-out after single tap.
     case decorationViewsFadeDuration(TimeInterval)
 
-    ///Duration of animated re-layout after device rotation.
-    case rotationDuration(TimeInterval)
-
     /// Duration of the displacement effect when gallery is being presented.
     case displacementDuration(TimeInterval)
 
@@ -141,9 +123,6 @@ public enum GalleryConfigurationItem {
     ///Allows to decide direction of swipe to dismiss, or disable it altogether
     case swipeToDismissMode(GallerySwipeToDismissMode)
 
-    ///Allows to set rotation support support with relation to rotation support in the hosting app.
-    case rotationMode(GalleryRotationMode)
-    
     ///Allows the video player to automatically continue playing the next video
     case continuePlayVideoOnEnd(Bool)
 
@@ -154,20 +133,11 @@ public enum GalleryConfigurationItem {
     case videoControlsColor(UIColor)
 }
 
-public enum GalleryRotationMode {
-
-    ///Gallery will rotate to orientations supported in the application.
-    case applicationBased
-
-    ///Gallery will rotate regardless of the rotation setting in the application.
-    case always
-}
-
 public enum ButtonMode {
 
     case none
-    case builtIn /// Standard Close or Thumbnails button.
-    case custom(UIButton)
+    case builtIn /// Standard Close, Thumbnails or Delete bar button item.
+    case custom(UIBarButtonItem) /// The gallery overrides the item's target and action.
 }
 
 public enum GalleryPagingMode {

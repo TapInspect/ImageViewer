@@ -130,6 +130,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
         scrollView.showsVerticalScrollIndicator = false
         scrollView.decelerationRate = UIScrollView.DecelerationRate.fast
         scrollView.contentInset = UIEdgeInsets.zero
+        scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.contentOffset = CGPoint.zero
         scrollView.minimumZoomScale = minimumZoomScale
         scrollView.maximumZoomScale = max(maximumZoomScale, aspectFillZoomScale(forBoundingSize: self.view.bounds.size, contentSize: itemView.bounds.size))
@@ -414,10 +415,6 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
             self?.scrollView.zoomScale = self!.scrollView.minimumZoomScale
 
-            if UIApplication.isPortraitOnly {
-                self?.itemView.transform = windowRotationTransform().inverted()
-            }
-
         }, completion: { [weak self] finished in
 
             completion?(finished)
@@ -448,11 +445,6 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
                 //Prepare the animated imageView
                 let animatedImageView = displacedView.imageView()
 
-                //rotate the imageView to starting angle
-                if UIApplication.isPortraitOnly == true {
-                    animatedImageView.transform = deviceRotationTransform()
-                }
-
                 //position the image view to starting center
                 animatedImageView.center = displacedView.convert(displacedView.boundsCenter, to: self.view)
 
@@ -465,10 +457,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
                 UIView.animate(withDuration: displacementDuration, delay: 0, usingSpringWithDamping: displacementSpringBounce, initialSpringVelocity: 1, options: .curveEaseIn, animations: { [weak self] in
 
-                    if UIApplication.isPortraitOnly == true {
-                        animatedImageView.transform = CGAffineTransform.identity
-                    }
-                    /// Animate it into the center (with optionally rotating) - that basically includes changing the size and position
+                    /// Animate it into the center - that basically includes changing the size and position
 
                     animatedImageView.bounds.size = self?.displacementTargetSize(forSize: image.size) ?? image.size
                     animatedImageView.center = self?.view.boundsCenter ?? CGPoint.zero
@@ -504,7 +493,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
     func displacementTargetSize(forSize size: CGSize) -> CGSize {
 
-        let boundingSize = rotationAdjustedBounds().size
+        let boundingSize = windowBounds().size
 
         return aspectFitSize(forContentOfSize: size, inBounds: boundingSize)
     }
@@ -540,11 +529,6 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
                 UIView.animate(withDuration: reverseDisplacementDuration, animations: { [weak self] in
 
                     self?.scrollView.zoomScale = 1
-
-                    //rotate the image view
-                    if UIApplication.isPortraitOnly == true {
-                        self?.itemView.transform = deviceRotationTransform()
-                    }
 
                     //position the image view to starting center
                     self?.itemView.bounds = displacedView.bounds

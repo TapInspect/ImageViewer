@@ -8,14 +8,6 @@
 
 import CoreGraphics
 
-extension CGPoint {
-
-    func inverted() -> CGPoint {
-
-        return CGPoint(x: self.y, y: self.x)
-    }
-}
-
 enum Direction {
 
     case left, right, up, down, none

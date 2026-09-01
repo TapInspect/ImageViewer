@@ -146,7 +146,7 @@ class VideoViewController: ItemBaseController<VideoView> {
     override func displacementTargetSize(forSize size: CGSize) -> CGSize {
 
         let isLandscape = itemView.bounds.width >= itemView.bounds.height
-        return aspectFitSize(forContentOfSize: isLandscape ? fullHDScreenSizeLandscape : fullHDScreenSizePortrait, inBounds: rotationAdjustedBounds().size)
+        return aspectFitSize(forContentOfSize: isLandscape ? fullHDScreenSizeLandscape : fullHDScreenSizePortrait, inBounds: windowBounds().size)
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
