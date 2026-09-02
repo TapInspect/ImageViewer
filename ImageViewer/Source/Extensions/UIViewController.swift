@@ -12,6 +12,8 @@ public extension UIViewController {
 
     func presentImageGallery(_ gallery: GalleryViewController, completion: (() -> Void)? = {}) {
 
-        present(gallery, animated: false, completion: completion)
+        let navigationController = UINavigationController(rootViewController: gallery)
+        navigationController.modalPresentationStyle = gallery.modalPresentationStyle
+        present(navigationController, animated: false, completion: completion)
     }
 }

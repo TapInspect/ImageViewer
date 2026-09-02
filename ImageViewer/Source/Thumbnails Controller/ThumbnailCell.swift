@@ -16,15 +16,17 @@ class ThumbnailCell: UICollectionViewCell {
         super.init(frame: frame)
         imageView.backgroundColor = UIColor.clear
         imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(imageView)
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+        ])
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-
-    override func layoutSubviews() {
-        imageView.frame = bounds
-        super.layoutSubviews()
     }
 }

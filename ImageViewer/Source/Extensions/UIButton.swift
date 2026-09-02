@@ -89,29 +89,4 @@ extension UIButton {
 
         return button
     }
-
-    static func closeButton() -> UIButton {
-
-        let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 50, height: 50)))
-        button.setImage(CAShapeLayer.closeShape(edgeLength: 15).toImage(), for: .normal)
-
-        return button
-    }
-
-    static func thumbnailsButton() -> UIButton {
-
-        let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 80, height: 50)))
-        button.setTitle("See All", for: .normal)
-        //button.titleLabel?.textColor = UIColor.redColor()
-
-        return button
-    }
-
-    static func deleteButton() -> UIButton {
-
-        let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 80, height: 50)))
-        button.setTitle("Delete", for: .normal)
-
-        return button
-    }
 }

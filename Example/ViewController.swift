@@ -72,12 +72,10 @@ class ViewController: UIViewController {
         guard let displacedViewIndex = items.firstIndex(where: { $0.imageView == displacedView }) else { return }
 
         let frame = CGRect(x: 0, y: 0, width: 200, height: 24)
-        let headerView = CounterView(frame: frame, currentIndex: displacedViewIndex, count: items.count)
-        let footerView = CounterView(frame: frame, currentIndex: displacedViewIndex, count: items.count)
+        let counterView = CounterView(frame: frame, currentIndex: displacedViewIndex, count: items.count)
 
         let galleryViewController = GalleryViewController(startIndex: displacedViewIndex, itemsDataSource: self, itemsDelegate: self, displacedViewsDataSource: self, configuration: galleryConfiguration())
-        galleryViewController.headerView = headerView
-        galleryViewController.footerView = footerView
+        galleryViewController.navigationItem.titleView = counterView
 
         galleryViewController.launchedCompletion = { print("LAUNCHED") }
         galleryViewController.closedCompletion = { print("CLOSED") }
@@ -87,10 +85,8 @@ class ViewController: UIViewController {
 
             print("LANDED AT INDEX: \(index)")
 
-            headerView.count = self.items.count
-            headerView.currentIndex = index
-            footerView.count = self.items.count
-            footerView.currentIndex = index
+            counterView.count = self.items.count
+            counterView.currentIndex = index
         }
 
         self.presentImageGallery(galleryViewController)
@@ -134,7 +130,6 @@ class ViewController: UIViewController {
 
             GalleryConfigurationItem.itemFadeDuration(0.3),
             GalleryConfigurationItem.decorationViewsFadeDuration(0.15),
-            GalleryConfigurationItem.rotationDuration(0.15),
 
             GalleryConfigurationItem.displacementDuration(0.55),
             GalleryConfigurationItem.reverseDisplacementDuration(0.25),

@@ -8,86 +8,42 @@
 
 import UIKit
 
-class ThumbnailsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UINavigationBarDelegate {
+class ThumbnailsViewController: UICollectionViewController {
 
     fileprivate let reuseIdentifier = "ThumbnailCell"
-    fileprivate let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
-    fileprivate var isAnimating = false
-    fileprivate let rotationAnimationDuration = 0.2
 
     var onItemSelected: ((Int) -> Void)?
-    let layout = UICollectionViewFlowLayout()
     weak var itemsDataSource: GalleryItemsDataSource!
-    var closeButton: UIButton?
-    var closeLayout: ButtonLayout?
+    lazy var closeButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(close))
 
     required init(itemsDataSource: GalleryItemsDataSource) {
         self.itemsDataSource = itemsDataSource
 
-        super.init(collectionViewLayout: layout)
-
-        NotificationCenter.default.addObserver(self, selector: #selector(rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
+        super.init(collectionViewLayout: ThumbnailsViewController.makeLayout())
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    @objc func rotate() {
-        guard UIApplication.isPortraitOnly else { return }
-
-        guard UIDevice.current.orientation.isFlat == false &&
-            isAnimating == false else { return }
-
-        isAnimating = true
-
-        UIView.animate(withDuration: rotationAnimationDuration, delay: 0, options: UIView.AnimationOptions.curveLinear, animations: { [weak self] () -> Void in
-            self?.view.transform = windowRotationTransform()
-            self?.view.bounds = rotationAdjustedBounds()
-            self?.view.setNeedsLayout()
-            self?.view.layoutIfNeeded()
-
-            })
-        { [weak self] finished  in
-            self?.isAnimating = false
-        }
+    private static func makeLayout() -> UICollectionViewLayout {
+        let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/3), heightDimension: .fractionalHeight(1)))
+        item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(1/3)), subitems: [item])
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
+        return UICollectionViewCompositionalLayout(section: section)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let screenWidth = self.view.frame.width
-        layout.sectionInset = UIEdgeInsets(top: 50, left: 8, bottom: 8, right: 8)
-        layout.itemSize = CGSize(width: screenWidth/3 - 8, height: screenWidth/3 - 8)
-        layout.minimumInteritemSpacing = 4
-        layout.minimumLineSpacing = 4
-
         self.collectionView?.register(ThumbnailCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
-        addCloseButton()
-    }
-
-    fileprivate func addCloseButton() {
-        guard let closeButton = closeButton, let closeLayout = closeLayout else { return }
-
-        switch closeLayout {
-        case .pinRight(let marginTop, let marginRight):
-            closeButton.autoresizingMask = [.flexibleBottomMargin, .flexibleLeftMargin]
-            closeButton.frame.origin.x = self.view.bounds.size.width - marginRight - closeButton.bounds.size.width
-            closeButton.frame.origin.y = marginTop
-        case .pinLeft(let marginTop, let marginLeft):
-            closeButton.autoresizingMask = [.flexibleBottomMargin, .flexibleRightMargin]
-            closeButton.frame.origin.x = marginLeft
-            closeButton.frame.origin.y = marginTop
+        navigationItem.rightBarButtonItem = closeButton
+        if #unavailable(iOS 26.0) {
+            closeButton.tintColor = .black
         }
-
-        closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-
-        self.view.addSubview(closeButton)
     }
 
     @objc func close() {
